@@ -3,12 +3,16 @@ import { useLocation, Switch } from 'react-router-dom';
 import AppRoute from './utils/AppRoute';
 import ScrollReveal from './utils/ScrollReveal';
 import ReactGA from 'react-ga';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Layouts
 import LayoutDefault from './layouts/LayoutDefault';
+import AuthDefault from './layouts/AuthDefault';
 
 // Views 
 import Home from './views/homepage';
+import Signup from './components/sections/Signup';
+import Login from './components/sections/Login';
 
 // Initialize Google Analytics
 ReactGA.initialize(process.env.REACT_APP_GA_CODE);
@@ -37,6 +41,8 @@ const App = () => {
       children={() => (
         <Switch>
           <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
+          <AppRoute exact path="/signup/" component={Signup} layout={AuthDefault} />
+          <AppRoute exact path="/login/" component={Login} layout={AuthDefault} />
         </Switch>
       )} />
   );
