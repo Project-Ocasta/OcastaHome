@@ -81,7 +81,7 @@ const Hero = ({
           </div>
           <div className="hero-figure reveal-from-bottom illustration-element-01" data-reveal-value="20px" data-reveal-delay="800">
             <a
-              data-video="https://player.vimeo.com/video/174002812"
+              data-video="https://firebasestorage.googleapis.com/v0/b/projectocasta.appspot.com/o/video%20placeholder.mp4?alt=media&token=9e8bbec2-aaab-4808-8ed0-325dc8505d03"
               href="#0"
               aria-controls="video-modal"
               onClick={openModal}
@@ -98,7 +98,7 @@ const Hero = ({
             id="video-modal"
             show={videoModalActive}
             handleClose={closeModal}
-            video="https://player.vimeo.com/video/174002812"
+            video="https://firebasestorage.googleapis.com/v0/b/projectocasta.appspot.com/o/video%20placeholder.mp4?alt=media&token=9e8bbec2-aaab-4808-8ed0-325dc8505d03"
             videoTag="iframe" />
         </div>
       </div>
