@@ -2,12 +2,13 @@ import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
-import { getAuth, sendEmailVerification } from "firebase/auth"
+import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth"
 
 export default function Signup() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
+    const displayNameRef = useRef();
     const { signup } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -22,10 +23,14 @@ export default function Signup() {
         if (passwordRef.current.value.length < 6) {
             return setError('Password must be at least 6 characters');
         }
+        if (displayNameRef.current.value.length < 3) {
+            return setError('Display name must be at least 3 characters');
+        }
         try {
             setError('')
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
+            await updateProfile(auth.currentUser, { displayName: displayNameRef.current.value })
             await sendEmailVerification(auth.currentUser)
             history.push('/')
         } catch {
@@ -43,6 +48,10 @@ export default function Signup() {
                 <h2 classname="text-center mb-4">Sign Up</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
+                    <Form.Group id="username">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control type="username" ref={displayNameRef} required />
+                    </Form.Group>
                     <Form.Group id="email">
                         <Form.Label>Email</Form.Label>
                         <Form.Control type="email" ref={emailRef} required />
