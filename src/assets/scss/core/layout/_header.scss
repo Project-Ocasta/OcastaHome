@@ -150,3 +150,9 @@
 		height: $header-height__desktop;
 	}
 }
+
+.alert {
+	padding: $alert-padding;
+	margin: $alert-margin;
+	margin-top: $alert-margin-top;
+}

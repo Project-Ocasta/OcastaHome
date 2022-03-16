@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import Logo from './partials/Logo';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Alert } from 'react-bootstrap'
 
 const propTypes = {
   navPosition: PropTypes.string,
@@ -33,6 +34,7 @@ const Header = ({
 
   const [isActive, setIsactive] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [error, setError] = useState(null);
 
   const nav = useRef(null);
   const hamburger = useRef(null);
@@ -74,6 +76,11 @@ const Header = ({
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user);
+      if (user && !user.emailVerified) {
+        setError('Please verify your email address');
+      } else {
+        setError(null);
+      }
     });
   }, []);
 
@@ -88,6 +95,7 @@ const Header = ({
       {...props}
       className={classes}
     >
+      <Alert variant="warning" className="text-center" hidden={!error}>{error}</Alert>
       <div className="container">
         <div className={
           classNames(

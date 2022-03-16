@@ -15,6 +15,9 @@ $header-hamburger--size: 		24px;		// hamburger button, width and height
 $header-hamburger--thickness: 	2px;		// hamburger button, stroke width
 $header-hamburger--radius: 		null;		// hamburger button, lines radius cap
 $header-hamburger--distance: 	7px;		// hamburger button, top and bottom lines distance from center
+$alert-padding: 				4px;		// padding for alerts
+$alert-margin: 					0 auto;		// margin for alerts
+$alert-margin-top: 				8px;		// margin for alerts
 
 // Don't change line below!
 $bg--color: map-push($bg--color, $header--bg);
