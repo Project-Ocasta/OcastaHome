@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import Logo from './partials/Logo';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const propTypes = {
   navPosition: PropTypes.string,
@@ -31,6 +32,7 @@ const Header = ({
 }) => {
 
   const [isActive, setIsactive] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const nav = useRef(null);
   const hamburger = useRef(null);
@@ -67,6 +69,13 @@ const Header = ({
     if (!isActive || nav.current.contains(e.target) || e.target === hamburger.current) return;
     closeMenu();
   }  
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
 
   const classes = classNames(
     'site-header',
@@ -120,7 +129,8 @@ const Header = ({
                       className="list-reset header-nav-right"
                     >
                       <li>
-                        <Link to="/signup/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Sign Up</Link>
+                        {!isLoggedIn && (<Link to="/signup/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Sign Up</Link>)}
+                        {isLoggedIn && (<Link to="/profiles/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Account</Link>)}
                       </li>
                     </ul>}
                 </div>

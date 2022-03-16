@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 // Layouts
 import LayoutDefault from './layouts/LayoutDefault';
-import { AuthProvider } from './contexts/AuthContext';
+import AuthDefault from './layouts/AuthDefault';
 
 // Views 
 import Home from './views/homepage';
@@ -30,10 +30,8 @@ const App = () => {
       children={() => (
         <Switch>
           <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
-          <AuthProvider>
-            <AppRoute exact path="/signup/" component={Signup} layout={LayoutDefault} />
-            <AppRoute exact path="/login/" component={Login} layout={LayoutDefault} />
-          </AuthProvider>
+            <AppRoute exact path="/signup/" component={Signup} layout={AuthDefault} />
+            <AppRoute exact path="/login/" component={Login} layout={AuthDefault} />
           <Redirect to="/" />
         </Switch>
       )} />
