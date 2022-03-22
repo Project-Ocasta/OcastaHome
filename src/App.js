@@ -12,6 +12,7 @@ import AuthDefault from './layouts/AuthDefault';
 import Home from './views/homepage';
 import Signup from './components/sections/Signup';
 import Login from './components/sections/Login';
+import ProfileMenu from './views/profilemenu';
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
           <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
             <AppRoute exact path="/signup/" component={Signup} layout={AuthDefault} />
             <AppRoute exact path="/login/" component={Login} layout={AuthDefault} />
+            <AppRoute exact path="/profile/" component={ProfileMenu} layout={LayoutDefault} />
           <Redirect to="/" />
         </Switch>
       )} />
