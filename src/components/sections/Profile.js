@@ -1,26 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Card, Button, Stack, CardImg } from "react-bootstrap";
-import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 export default function ProfileMenu() {
   const auth = getAuth();
   const history = useHistory();
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
   const inputFile = useRef(null);
   const storage = getStorage();
 
   const onButtonClick = () => {
     inputFile.current.click();
   };
-
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-    });
-  }, []);
 
   async function changeemail(e) {
     e.preventDefault();
@@ -135,7 +127,7 @@ export default function ProfileMenu() {
       <input type="file" ref={inputFile} onChange={changepfp} style={{ display: "none" }} />
       <Stack direction="horizontal">
         <Card.Body className="CardImage" onClick={onButtonClick} style={{ cursor: "pointer" }}>
-          {isLoggedIn && (<CardImg src={auth.currentUser.photoURL} />)}
+          <CardImg src={auth.currentUser.photoURL} />
         </Card.Body>
         <Card.Body>
           <h3> Account Info </h3>
