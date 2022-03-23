@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, Button, Stack, CardImg } from "react-bootstrap";
 import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
+import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 export default function ProfileMenu() {
   const auth = getAuth();
   const history = useHistory();
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const inputFile = useRef(null);
+  const storage = getStorage();
+
+  const onButtonClick = () => {
+    inputFile.current.click();
+  };
 
   useEffect(() => {
     const auth = getAuth();
@@ -78,38 +85,56 @@ export default function ProfileMenu() {
   }
   async function deleteaccount(e) {
     e.preventDefault();
-    try {
-      if (prompt("Are you sure you want to delete your account? Type '" + auth.currentUser.displayName + "' to confirm.") === auth.currentUser.displayName) {
+    if (prompt("Are you sure you want to delete your account? Type '" + auth.currentUser.displayName + "' to confirm.") === auth.currentUser.displayName) {
+      const fileRef = ref(storage, "userdata/" + auth.currentUser.uid + "/profile.png");
+      try {
         await deleteUser(auth.currentUser);
+        await deleteObject(fileRef);
         history.push("/");
-      } else {
-        alert("Account deletion cancelled");
+      } catch (error) {
+        console.log(error);
+        if (error.code === "auth/requires-recent-login") {
+          alert("For security reasons, you can only delete your account if you have not signed in for more than 24 hours. Please re-login and try again.");
+          signOut(auth);
+          history.push("/");
+        }
+        if (error.code === "auth/user-not-found") {
+          alert("User not found");
+        }
+        if (error.code !== "auth/requires-recent-login" && error.code !== "auth/user-not-found" && error.code !== "storage/object-not-found") {
+          alert("Failed to delete account");
+        }
       }
-    } catch (error) {
-      console.log(error);
-      if (error.code === "auth/requires-recent-login") {
-        alert("For security reasons, you can only delete your account if you have not signed in for more than 24 hours. Please re-login and try again.");
-        signOut(auth);
-        history.push("/");
-      }
-      if (error.code === "auth/user-not-found") {
-        alert("User not found");
-      }
-      if (error.code !== "auth/requires-recent-login" && error.code !== "auth/user-not-found") {
-        alert("Failed to delete account");
-      }
+    } else {
+      alert("Account deletion cancelled");
     }
   }
   async function changepfp(e) {
     e.preventDefault();
-    alert("PFP change not supported yet... sorry!");
+    const file = inputFile.current.files[0];
+    if (file) {
+      const fileRef = ref(storage, "userdata/" + auth.currentUser.uid + "/profile.png");
+      try {
+        await uploadBytes(fileRef, file);
+        getDownloadURL(fileRef).then((url) => {
+          updateProfile(auth.currentUser, { photoURL: url })
+        })
+        alert("Profile picture changed successfully");
+      } catch (error) {
+        console.log(error);
+        alert("Failed to change profile picture");
+      }
+    } else {
+      alert("No file selected");
+    }
   }
 
   return (
     <Card>
       <h2 className="text-center mb-4">Profile Menu</h2>
+      <input type="file" ref={inputFile} onChange={changepfp} style={{ display: "none" }} />
       <Stack direction="horizontal">
-        <Card.Body className="CardImage" onClick={changepfp} style={{ cursor: "pointer" }}>
+        <Card.Body className="CardImage" onClick={onButtonClick} style={{ cursor: "pointer" }}>
           {isLoggedIn && (<CardImg src={auth.currentUser.photoURL} />)}
         </Card.Body>
         <Card.Body>
