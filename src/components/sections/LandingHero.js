@@ -5,6 +5,7 @@ import ButtonGroup from '../elements/ButtonGroup';
 import Button from '../elements/Button';
 import Image from '../elements/Image';
 import Modal from '../elements/Modal';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const propTypes = {
   ...SectionProps.types
@@ -26,6 +27,11 @@ const Hero = ({
 }) => {
 
   const [videoModalActive, setVideomodalactive] = useState(false);
+  const storage = getStorage();
+
+  getDownloadURL(ref(storage, 'video.mp4')).then(url => {
+    window.videoUrl = url;
+  });
 
   const openModal = (e) => {
     e.preventDefault();
@@ -81,7 +87,7 @@ const Hero = ({
           </div>
           <div className="hero-figure reveal-from-bottom illustration-element-01" data-reveal-value="20px" data-reveal-delay="800">
             <a
-              data-video="https://firebasestorage.googleapis.com/v0/b/projectocasta.appspot.com/o/video%20placeholder.mp4?alt=media&token=9e8bbec2-aaab-4808-8ed0-325dc8505d03"
+              data-video={window.videoUrl}
               href="#0"
               aria-controls="video-modal"
               onClick={openModal}
@@ -98,7 +104,7 @@ const Hero = ({
             id="video-modal"
             show={videoModalActive}
             handleClose={closeModal}
-            video="https://firebasestorage.googleapis.com/v0/b/projectocasta.appspot.com/o/video%20placeholder.mp4?alt=media&token=9e8bbec2-aaab-4808-8ed0-325dc8505d03"
+            video={window.videoUrl}
             videoTag="iframe" />
         </div>
       </div>

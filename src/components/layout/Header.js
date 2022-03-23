@@ -138,7 +138,7 @@ const Header = ({
                     >
                       <li>
                         {!isLoggedIn && (<Link to="/signup/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Sign Up</Link>)}
-                        {isLoggedIn && (<Link to="/profiles/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Account</Link>)}
+                        {isLoggedIn && (<Link to="/profile/" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Account</Link>)}
                       </li>
                     </ul>}
                 </div>
