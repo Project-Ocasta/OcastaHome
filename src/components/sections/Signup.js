@@ -3,6 +3,7 @@ import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
 import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth"
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default function Signup() {
     const emailRef = useRef();
@@ -14,6 +15,7 @@ export default function Signup() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
     const auth = getAuth();
+    const storage = getStorage();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -31,6 +33,8 @@ export default function Signup() {
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             await updateProfile(auth.currentUser, { displayName: displayNameRef.current.value })
+            getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
+            updateProfile(auth.currentUser, { photoURL: url }) })
             await sendEmailVerification(auth.currentUser)
             history.push('/')
         } catch {

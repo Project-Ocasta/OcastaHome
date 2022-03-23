@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Button, Stack, CardImg } from "react-bootstrap";
-import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile } from "firebase/auth";
+import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 
 export default function ProfileMenu() {
   const auth = getAuth();
   const history = useHistory();
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
 
   async function changeemail(e) {
     e.preventDefault();
@@ -14,6 +22,8 @@ export default function ProfileMenu() {
       if (email) {
         await updateEmail(auth.currentUser, email);
         alert("Email changed successfully");
+      } else {
+        alert("Email is required");
       }
     } catch (error) {
       console.log(error);
@@ -72,6 +82,8 @@ export default function ProfileMenu() {
       if (prompt("Are you sure you want to delete your account? Type '" + auth.currentUser.displayName + "' to confirm.") === auth.currentUser.displayName) {
         await deleteUser(auth.currentUser);
         history.push("/");
+      } else {
+        alert("Account deletion cancelled");
       }
     } catch (error) {
       console.log(error);
@@ -98,7 +110,7 @@ export default function ProfileMenu() {
       <h2 className="text-center mb-4">Profile Menu</h2>
       <Stack direction="horizontal">
         <Card.Body className="CardImage" onClick={changepfp} style={{ cursor: "pointer" }}>
-          <CardImg src={"https://projectocasta.org/logo512.png"} />
+          {isLoggedIn && (<CardImg src={auth.currentUser.photoURL} />)}
         </Card.Body>
         <Card.Body>
           <h3> Account Info </h3>
