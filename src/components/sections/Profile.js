@@ -108,10 +108,11 @@ export default function ProfileMenu() {
       const fileRef = ref(storage, "userdata/" + auth.currentUser.uid + "/profile.png");
       try {
         await uploadBytes(fileRef, file);
-        getDownloadURL(fileRef).then((url) => {
+        await getDownloadURL(fileRef).then((url) => {
           updateProfile(auth.currentUser, { photoURL: url })
         })
         alert("Profile picture changed successfully");
+        window.location.reload();
       } catch (error) {
         console.log(error);
         alert("Failed to change profile picture");
