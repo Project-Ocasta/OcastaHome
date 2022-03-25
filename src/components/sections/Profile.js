@@ -93,8 +93,12 @@ export default function ProfileMenu() {
         if (error.code === "auth/user-not-found") {
           alert("User not found");
         }
-        if (error.code !== "auth/requires-recent-login" && error.code !== "auth/user-not-found" && error.code !== "storage/object-not-found") {
+        if (error.code !== "auth/requires-recent-login" && error.code !== "auth/user-not-found") {
+          if (error.code !== "storage/object-not-found") {
           alert("Failed to delete account");
+          } else {
+            history.push("/");
+          }
         }
       }
     } else {
