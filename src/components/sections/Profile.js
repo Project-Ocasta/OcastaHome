@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { Card, Button, Stack, CardImg } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Card, Button, Stack, CardImg, Modal, Form } from "react-bootstrap";
 import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
@@ -9,6 +9,19 @@ export default function ProfileMenu() {
   const history = useHistory();
   const inputFile = useRef(null);
   const storage = getStorage();
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [DeleteUsername, setDeleteUsername] = useState("");
+
+  const handleCloseUsernameModal = () => setShowUsernameModal(false);
+  const handleShowUsernameModal = () => setShowUsernameModal(true);
+  const handleCloseEmailModal = () => setShowEmailModal(false);
+  const handleShowEmailModal = () => setShowEmailModal(true);
+  const handleCloseDeleteModal = () => setShowDeleteModal(false);
+  const handleShowDeleteModal = () => setShowDeleteModal(true);
 
   const onButtonClick = () => {
     inputFile.current.click();
@@ -16,7 +29,6 @@ export default function ProfileMenu() {
 
   async function changeemail(e) {
     e.preventDefault();
-    const email = prompt("Enter new email");
     try {
       if (email) {
         await updateEmail(auth.currentUser, email);
@@ -54,7 +66,6 @@ export default function ProfileMenu() {
   }
   async function changeusername(e) {
     e.preventDefault();
-    const username = prompt("Enter new username");
     try {
       if (username) {
         await updateProfile(auth.currentUser, { displayName: username });
@@ -77,7 +88,7 @@ export default function ProfileMenu() {
   }
   async function deleteaccount(e) {
     e.preventDefault();
-    if (prompt("Are you sure you want to delete your account? Type '" + auth.currentUser.displayName + "' to confirm.") === auth.currentUser.displayName) {
+    if (DeleteUsername === auth.currentUser.displayName) {
       const fileRef = ref(storage, "userdata/" + auth.currentUser.uid + "/profile.png");
       try {
         await deleteUser(auth.currentUser);
@@ -95,7 +106,7 @@ export default function ProfileMenu() {
         }
         if (error.code !== "auth/requires-recent-login" && error.code !== "auth/user-not-found") {
           if (error.code !== "storage/object-not-found") {
-          alert("Failed to delete account");
+            alert("Failed to delete account");
           } else {
             history.push("/");
           }
@@ -137,10 +148,10 @@ export default function ProfileMenu() {
         <Card.Body>
           <h3> Account Info </h3>
           <Stack direction="horizontal" gap={3}>
-            <Button variant="primary" onClick={changeusername}>
+            <Button variant="primary" onClick={handleShowUsernameModal}>
               Change Username?
             </Button>
-            <Button variant="primary" onClick={changeemail}>
+            <Button variant="primary" onClick={handleShowEmailModal}>
               Change Email?
             </Button>
             <Button variant="primary" onClick={changepass}>
@@ -153,11 +164,79 @@ export default function ProfileMenu() {
             Sign Out?
           </Button>
           <br /><br />
-          <Button variant="danger" onClick={deleteaccount}>
+          <Button variant="danger" onClick={handleShowDeleteModal}>
             Delete Account?
           </Button>
         </Card.Body>
       </Stack>
+
+
+      <Modal show={showEmailModal} onHide={handleCloseEmailModal}>
+        <Modal.Header>
+          <Modal.Title>Change Email</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={changeemail}>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="text" placeholder="Enter new Email" onChange={(e) => setEmail(e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={changeemail}>
+            Change Email
+          </Button>
+          <Button variant="secondary" onClick={handleCloseEmailModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showUsernameModal} onHide={handleCloseUsernameModal}>
+        <Modal.Header>
+          <Modal.Title>Change Username</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={changeusername}>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Enter new Username" onChange={(e) => setUsername(e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={changeusername}>
+            Change Username
+          </Button>
+          <Button variant="secondary" onClick={handleCloseUsernameModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header>
+          <Modal.Title>Delete Account</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={deleteaccount}>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Type your Username to Confirm Account Deletion</Form.Label>
+              <Form.Control type="text" placeholder={auth.currentUser.displayName} onChange={(e) => setDeleteUsername(e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deleteaccount}>
+            Delete Account
+          </Button>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </Card>
   );
 }
