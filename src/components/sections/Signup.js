@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
-import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth"
+import { getAuth, sendEmailVerification, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default function Signup() {
@@ -16,6 +16,7 @@ export default function Signup() {
     const history = useHistory();
     const auth = getAuth();
     const storage = getStorage();
+    const provider = new GoogleAuthProvider();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -39,6 +40,25 @@ export default function Signup() {
             history.push('/')
         } catch {
             setError('Failed to create account');
+            setLoading(false)
+        }
+
+        setLoading(false)
+    }
+    async function handleGoogleSignIn(e) {
+        e.preventDefault();
+        try {
+            setError('')
+            setLoading(true)
+            signInWithPopup(auth, provider).then((result) => {
+                const user = result.user;
+                getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
+                updateProfile(user, { photoURL: url }) })
+                sendEmailVerification(user)
+                history.push('/')
+            });
+        } catch {
+            setError('Failed to sign in');
             setLoading(false)
         }
 
@@ -68,9 +88,13 @@ export default function Signup() {
                         <Form.Label>Password Conformation</Form.Label>
                         <Form.Control type="password" ref={passwordConfirmRef} required />
                     </Form.Group>
-                    <br></br>
+                    <br />
                     <Button disabled={loading} type="submit">
                         Sign Up
+                    </Button>
+                    <br /><br />
+                    <Button disabled={loading} onClick={handleGoogleSignIn}>
+                        Sign Up with Google
                     </Button>
                 </Form>
             </Card.Body>
