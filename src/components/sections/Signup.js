@@ -40,7 +40,6 @@ export default function Signup() {
             history.push('/')
         } catch {
             setError('Failed to create account');
-            setLoading(false)
         }
 
         setLoading(false)
@@ -50,7 +49,7 @@ export default function Signup() {
         try {
             setError('')
             setLoading(true)
-            signInWithPopup(auth, provider).then((result) => {
+            await signInWithPopup(auth, provider).then((result) => {
                 const user = result.user;
                 getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
                 updateProfile(user, { photoURL: url }) })
@@ -58,8 +57,7 @@ export default function Signup() {
                 history.push('/')
             });
         } catch {
-            setError('Failed to sign in');
-            setLoading(false)
+            setError('Failed Google Authentication');
         }
 
         setLoading(false)
@@ -93,9 +91,11 @@ export default function Signup() {
                         Sign Up
                     </Button>
                     <br /><br />
-                    <Button disabled={loading} onClick={handleGoogleSignIn}>
-                        Sign Up with Google
+                    <div className="text-center">
+                    <Button disabled={loading} onClick={handleGoogleSignIn} variant="danger">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt='' width={30} height={30} align="left" /> &nbsp; Sign Up with Google
                     </Button>
+                    </div>
                 </Form>
             </Card.Body>
         </Card>
