@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, Switch, Redirect } from 'react-router-dom';
 import AppRoute from './utils/AppRoute';
 import ScrollReveal from './utils/ScrollReveal';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // Layouts
@@ -18,10 +18,16 @@ import ProfileMenu from './views/profilemenu';
 const App = () => {
 
   const childRef = useRef();
-  const auth = getAuth();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   let location = useLocation();
 
   useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+      setLoading(false);
+    });
     document.body.classList.add('is-loaded')
     childRef.current.init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,10 +39,10 @@ const App = () => {
       children={() => (
         <Switch>
           <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
-            <AppRoute exact path="/signup/" component={Signup} layout={AuthDefault} />
-            <AppRoute exact path="/login/" component={Login} layout={AuthDefault} />
-            {auth.currentUser && (<AppRoute exact path="/profile/" component={ProfileMenu} layout={LayoutDefault} />)}
-          <Redirect to="/" />
+          <AppRoute exact path="/signup/" component={Signup} layout={AuthDefault} />
+          <AppRoute exact path="/login/" component={Login} layout={AuthDefault} />
+          {isLoggedIn && (<AppRoute exact path="/profile/" component={ProfileMenu} layout={LayoutDefault} />)}
+          {!loading && (<Redirect to="/" />)}
         </Switch>
       )} />
   );

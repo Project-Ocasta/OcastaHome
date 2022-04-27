@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
-import { Card, Button, Stack, CardImg, Modal, Form } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, Button, Stack, CardImg, Modal, Form, Badge } from "react-bootstrap";
 import { getAuth, signOut, sendPasswordResetEmail, deleteUser, updateEmail, updateProfile } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 export default function ProfileMenu() {
   const auth = getAuth();
@@ -15,6 +16,7 @@ export default function ProfileMenu() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [DeleteUsername, setDeleteUsername] = useState("");
+  const [roles, setRoles] = useState("");
 
   const handleCloseUsernameModal = () => setShowUsernameModal(false);
   const handleShowUsernameModal = () => setShowUsernameModal(true);
@@ -136,6 +138,24 @@ export default function ProfileMenu() {
       alert("No file selected");
     }
   }
+  useEffect(() => {
+    const auth = getAuth();
+    const db = getFirestore();
+    async function getroles() {
+      const docRef = doc(db, "data/users/" + auth.currentUser.uid + "/roles");
+      const docSnap = await getDoc(docRef);
+      try {
+        const rolelist = JSON.stringify(docSnap.data()).replace(/"/g, "").replace("{list:[", "").replace("]}", "").split(",");
+        for (let role of rolelist) {
+          console.log(role);
+          setRoles(rolelist);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getroles();
+  }, []);
 
   return (
     <Card>
@@ -169,6 +189,7 @@ export default function ProfileMenu() {
           </Button>
         </Card.Body>
       </Stack>
+      {roles && (<Card.Body> <h3> Roles </h3> { roles.map((role) => { return (<div key={role}> <Badge pill bg="primary"> {role} </Badge> </div>)})} </Card.Body>)}
 
 
       <Modal show={showEmailModal} onHide={handleCloseEmailModal}>

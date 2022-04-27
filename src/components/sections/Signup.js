@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
 import { getAuth, sendEmailVerification, updateProfile, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth"
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { db } from '../../firebase'
 
 export default function Signup() {
     const emailRef = useRef();
@@ -39,6 +40,9 @@ export default function Signup() {
                 updateProfile(auth.currentUser, { photoURL: url })
             })
             await sendEmailVerification(auth.currentUser)
+            db.collection('data').doc('users').collection(auth.currentUser.uid).doc('roles').set({
+                list: ["New User"],
+            })
             history.push('/')
         } catch {
             setError('Failed to create account');
@@ -57,6 +61,9 @@ export default function Signup() {
                     updateProfile(user, { photoURL: url })
                 })
                 sendEmailVerification(user)
+                db.collection('data').doc('users').collection(user.uid).doc('roles').set({
+                    list: ["New User"],
+                })
                 history.push('/')
             });
         } catch {
@@ -76,6 +83,9 @@ export default function Signup() {
                     updateProfile(user, { photoURL: url })
                 })
                 sendEmailVerification(user)
+                db.collection('data').doc('users').collection(user.uid).doc('roles').set({
+                    list: ["New User"],
+                })
                 history.push('/')
             });
         } catch {
