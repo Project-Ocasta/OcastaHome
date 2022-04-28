@@ -3,7 +3,9 @@ import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
 import { getAuth, sendEmailVerification, updateProfile, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth"
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL } from "firebase/storage"
+import { doc, getDoc } from "firebase/firestore"
+import { db } from '../../firebase'
 
 export default function Login() {
     const emailRef = useRef();
@@ -39,10 +41,22 @@ export default function Login() {
             setLoading(true)
             await signInWithPopup(auth, googleProvider).then((result) => {
                 const user = result.user;
-                getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
-                    updateProfile(user, { photoURL: url })
-                })
-                sendEmailVerification(user)
+                const docRef = doc(db, "data/users/" + user.uid + "/other");
+                const docSnap = getDoc(docRef);
+                if (!user.photoURL) {
+                    getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
+                        updateProfile(user, { photoURL: url })
+                    })
+                }
+                if (!docSnap.SignedUp) {
+                    sendEmailVerification(user);
+                    db.collection('data').doc('users').collection(user.uid).doc('other').set({
+                        SignedUp: true
+                    })
+                    db.collection('data').doc('users').collection(user.uid).doc('roles').set({
+                        list: ["New User"],
+                    })
+                }
                 history.push('/')
             });
         } catch {
@@ -58,10 +72,22 @@ export default function Login() {
             setLoading(true)
             await signInWithPopup(auth, githubProvider).then((result) => {
                 const user = result.user;
-                getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
-                    updateProfile(user, { photoURL: url })
-                })
-                sendEmailVerification(user)
+                const docRef = doc(db, "data/users/" + user.uid + "/other");
+                const docSnap = getDoc(docRef);
+                if (!user.photoURL) {
+                    getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
+                        updateProfile(user, { photoURL: url })
+                    })
+                }
+                if (!docSnap.SignedUp) {
+                    sendEmailVerification(user);
+                    db.collection('data').doc('users').collection(user.uid).doc('other').set({
+                        SignedUp: true
+                    })
+                    db.collection('data').doc('users').collection(user.uid).doc('roles').set({
+                        list: ["New User"],
+                    })
+                }
                 history.push('/')
             });
         } catch {
