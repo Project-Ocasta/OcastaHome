@@ -118,9 +118,9 @@ export default function Signup() {
         <>
             <Card>
                 <Card.Body>
-                    <h2 classname="text-center mb-4">Sign Up</h2>
+                    <h2 className="text-center mb-4">Sign Up</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
-                    <Form onSubmit={handleSubmit}>
+                    <Form className='AuthForm' onSubmit={handleSubmit}>
                         <Form.Group id="username">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="username" ref={displayNameRef} required />
@@ -141,17 +141,15 @@ export default function Signup() {
                         <Button disabled={loading} type="submit">
                             Sign Up
                         </Button>
-                        <div className="text-center">
-                            <br /><br />
-                            <Button disabled={loading} onClick={handleGoogleSignIn} variant="danger">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt='' width={30} height={30} align="left" /> &nbsp; Sign Up with Google
-                            </Button>
-                            <br /><br />
-                            <Button disabled={loading} onClick={handleGithubSignIn} variant="dark">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt='' width={30} height={30} align="left" /> &nbsp; Sign Up with Github
-                            </Button>
-                        </div>
                     </Form>
+                    <br /><br />
+                    <Button disabled={loading} onClick={handleGoogleSignIn} variant="dark" className='buttons'>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt='' className='logos' /> &nbsp; Sign Up with Google
+                    </Button>
+                    <br /><br />
+                    <Button disabled={loading} onClick={handleGithubSignIn} variant="light" className='buttons'>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt='' className='logos' /> &nbsp; Sign Up with Github
+                    </Button>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">

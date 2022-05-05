@@ -2,4 +2,25 @@
     background-color: get-color(dark, 1);
     max-width: $signup--max-width;
     margin: 0 auto;
+    padding: 0 25px;
+}
+
+.logos {
+    width: 30px;
+    height: 30px;
+    float: left;
+}
+
+.buttons {
+    width: 28%;
+    height: fit-content;
+    float: right;
+    margin-right: 8%;
+}
+
+.AuthForm {
+    width: 56%;
+    margin: 0 auto;
+    padding: 0;
+    float: left;
 }
