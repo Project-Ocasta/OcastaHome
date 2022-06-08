@@ -4,8 +4,6 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useHistory } from 'react-router-dom'
 import { getAuth, sendEmailVerification, updateProfile, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth"
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
-import { doc, getDoc } from "firebase/firestore"
-import { db } from '../../firebase'
 
 export default function Signup() {
     const emailRef = useRef();
@@ -41,9 +39,6 @@ export default function Signup() {
                 updateProfile(auth.currentUser, { photoURL: url })
             })
             await sendEmailVerification(auth.currentUser)
-            db.collection('data').doc('users').collection(auth.currentUser.uid).doc('roles').set({
-                list: ["New User"],
-            })
             history.push('/')
         } catch {
             setError('Failed to create account');
@@ -58,20 +53,9 @@ export default function Signup() {
             setLoading(true)
             await signInWithPopup(auth, googleProvider).then((result) => {
                 const user = result.user;
-                const docRef = doc(db, "data/users/" + user.uid + "/other");
-                const docSnap = getDoc(docRef);
                 if (!user.photoURL) {
                     getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
                         updateProfile(user, { photoURL: url })
-                    })
-                }
-                if (!docSnap.SignedUp) {
-                    sendEmailVerification(user);
-                    db.collection('data').doc('users').collection(user.uid).doc('other').set({
-                        SignedUp: true
-                    })
-                    db.collection('data').doc('users').collection(user.uid).doc('roles').set({
-                        list: ["New User"],
                     })
                 }
                 history.push('/')
@@ -89,20 +73,9 @@ export default function Signup() {
             setLoading(true)
             await signInWithPopup(auth, githubProvider).then((result) => {
                 const user = result.user;
-                const docRef = doc(db, "data/users/" + user.uid + "/other");
-                const docSnap = getDoc(docRef);
                 if (!user.photoURL) {
                     getDownloadURL(ref(storage, 'defaultPFP.png')).then(url => {
                         updateProfile(user, { photoURL: url })
-                    })
-                }
-                if (!docSnap.SignedUp) {
-                    sendEmailVerification(user);
-                    db.collection('data').doc('users').collection(user.uid).doc('other').set({
-                        SignedUp: true
-                    })
-                    db.collection('data').doc('users').collection(user.uid).doc('roles').set({
-                        list: ["New User"],
                     })
                 }
                 history.push('/')

@@ -189,8 +189,9 @@ export default function ProfileMenu() {
           </Button>
         </Card.Body>
       </Stack>
-      {roles && (<Card.Body> <h3> Roles </h3> { roles.map((role) => { return (<div key={role}> <Badge pill bg="primary"> {role} </Badge> </div>)})} </Card.Body>)}
-
+      <h3> Roles </h3>
+      {roles && (<Card.Body> {roles.map((role) => { return (<div key={role}> <Badge pill bg="primary"> {role} </Badge> </div>) })} </Card.Body>)}
+      {!roles && (<Card.Body> <Badge pill bg="primary"> New User </Badge> </Card.Body>)}
 
       <Modal show={showEmailModal} onHide={handleCloseEmailModal}>
         <Modal.Header>
