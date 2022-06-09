@@ -72,10 +72,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Work in Production
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
                     Learning to do things in production is important for any future career. You will be able to work with other members to build a production ready project.
-                    </p>
+                  </p>
                 </div>
               </div>
             </div>
@@ -94,10 +94,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Web and Open Source
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
                     Everything we do is done on the web. All our work is open source and accessible to everyone. Open source is a great way to learn new technologies and share your work with the world.
-                    </p>
+                  </p>
                 </div>
               </div>
             </div>
@@ -116,10 +116,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Feedback
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
-                    Feedback is a crutial step to improving! Getting your work out into the world will provide you with feedback from users all over the world.
-                    </p>
+                    Getting feedback is a great way to improve your skills as you will learn about new things that you didn't think about before! Using open-sourcing we can connect you to users all over the world!
+                  </p>
                 </div>
               </div>
             </div>
@@ -138,10 +138,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Distribution and Collaboration
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
                     Distributing work among other members and collaborating with people of different skill sets will give you the opportunity to create your vision.
-                    </p>
+                  </p>
                 </div>
               </div>
             </div>
@@ -160,10 +160,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Work at your Pace
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
                     There will always be need for easy solutions and you can work up the ranks at your own speed.
-                    </p>
+                  </p>
                 </div>
               </div>
             </div>
@@ -182,10 +182,10 @@ const LandingTiles = ({
                 <div className="features-tiles-item-content">
                   <h4 className="mt-0 mb-8">
                     Find your Future
-                    </h4>
+                  </h4>
                   <p className="m-0 text-sm">
                     If you aren't sure what you are best at still feel free to join us! We can try to find somthing for you! You can <a href="mailto:getstarted@projectocasta.org">get in touch</a> with us to find out more.
-                    </p>
+                  </p>
                 </div>
               </div>
             </div>
