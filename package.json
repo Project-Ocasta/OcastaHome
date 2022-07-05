@@ -11,7 +11,7 @@
         "react": "^16.13.1",
         "react-bootstrap": "^2.1.2",
         "react-dom": "^16.13.1",
-        "react-router-dom": "^5.1.2",
+        "react-router-dom": "^6.3.0",
         "react-scripts": "^3.4.1"
     },
     "repository": {
