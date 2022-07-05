@@ -8,9 +8,9 @@
         "firebase": "^9.6.7",
         "lodash": "^4.17.21",
         "node-sass": "^4.13.1",
-        "react": "^16.13.1",
+        "react": "^18.1.0",
         "react-bootstrap": "^2.1.2",
-        "react-dom": "^16.13.1",
+        "react-dom": "^18.1.0",
         "react-router-dom": "^5.1.2",
         "react-scripts": "^3.4.1"
     },
